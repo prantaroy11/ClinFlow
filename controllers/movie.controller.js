@@ -5,8 +5,14 @@ const { errorResponseBody, successResponseBody } = require('../utils/responseBod
 
 const createMovie=async(req,res)=>{
     try{
-        const movie=await movieService.createMovie(req.body);
-        successResponseBody.data=movie;
+        const response=await movieService.createMovie(req.body);
+        if(response.err){
+            errorResponseBody.error=response.err;
+            errorResponseBody.code=response.code;
+            errorResponseBody.message="Validation error";
+            return res.status(response.code).json(errorResponseBody);
+        }
+        successResponseBody.data=response;
         successResponseBody.message="Successfully created the movie";
         return res.status(201).json(successResponseBody);
     }catch(err){
@@ -43,8 +49,27 @@ const getMovie=async(req,res)=>{
     }
 }
 
+const updateMovie=async(req,res)=>{
+    try{
+        const response=await movieService.updateMovie(req.params.id,req.body);
+        if(response.err){
+            errorResponseBody.error=response.err;
+            errorResponseBody.code=response.code;
+            errorResponseBody.message="Validation error";
+            return res.status(response.code).json(errorResponseBody);
+        }
+        successResponseBody.data=response;
+        successResponseBody.message="Successfully updated the movie";
+        return res.status(200).json(successResponseBody);
+    }catch(err){
+        errorResponseBody.error=err;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
 module.exports={
     createMovie,
     deleteMovie,
-    getMovie
+    getMovie,
+    updateMovie
 }

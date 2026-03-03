@@ -4,6 +4,7 @@ const movieSchema=new mongoose.Schema({
     name:{
         type:String,
         required:true,
+        minlength:2,
     },
     description:{
         type:String,
