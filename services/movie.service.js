@@ -52,9 +52,26 @@ const updateMovie=async(id,data)=>{
     }
 }
 
+const fetchMovies=async(filter)=>{
+    let query={};
+    if(filter.name){
+        query.name=filter.name;
+    }
+
+    let movies=await Movie.find(query);
+    if(!movies){
+        return{
+            err:"No movies found with the corresponding name",
+            code:404
+        }
+    }
+    return movies;
+}
+
 module.exports={
     getMovie,
     createMovie,
     deleteMovie,
-    updateMovie
+    updateMovie,
+    fetchMovies
 }
