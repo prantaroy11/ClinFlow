@@ -55,9 +55,28 @@ const getTheatre=async(req,res)=>{
     }
 }
 
+const getAllTheatres=async(req,res)=>{
+    try{
+        const response=await theatreService.getAllTheatres();
+        if(response.length==0){
+            errorResponseBody.error="No theatres found";
+            errorResponseBody.code=404;
+            errorResponseBody.message="No theatres found";
+            return res.status(404).json(errorResponseBody);
+        }
+        successResponseBody.data=response;
+        successResponseBody.message="Successfully fetched all theatres";
+        return res.status(200).json(successResponseBody);
+    }catch(err){
+        errorResponseBody.error=err;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
 module.exports={
     create,
     destroy,
-    getTheatre
+    getTheatre,
+    getAllTheatres
     
 }

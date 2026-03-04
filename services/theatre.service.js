@@ -42,9 +42,19 @@ const getTheatre=async(id)=>{
 
 }
 
+const getAllTheatres=async()=>{
+    try{
+        const theatres=await Theatre.find();
+        return theatres;
+    }catch(err){
+        throw err;
+    }
+}
+
 module.exports={
     createTheatre,
     deleteTheatre,
-    getTheatre
+    getTheatre,
+    getAllTheatres
 
 }
