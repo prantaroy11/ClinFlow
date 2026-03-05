@@ -19,8 +19,14 @@ const createTheatre=async(data)=>{
 
 const deleteTheatre=async(id)=>{
     try{
-        const theatre=await Theatre.deleteOne({_id:id});
-        return theatre;
+        const response=await Theatre.deleteOne({_id:id});
+        if(!response){
+            return{
+                err:"No theatre found with the corresponding id",
+                code:404
+            }
+        }
+        return response;
     }catch(err){
         throw err;
     }

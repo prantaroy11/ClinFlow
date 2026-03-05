@@ -25,7 +25,6 @@ const destroy=async(req,res)=>{
         if(response.err){
             errorResponseBody.error=response.err;
             errorResponseBody.code=response.code;
-            errorResponseBody.message="Validation error";
             return res.status(response.code).json(errorResponseBody);
         }
         successResponseBody.data=response;
