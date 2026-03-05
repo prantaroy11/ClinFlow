@@ -1,5 +1,11 @@
 const Movie = require('../models/movie.model');
 
+/**
+ * 
+ * @param  data -> contains the details of the movie to be created
+ * @returns ->returns the new movie object created
+ */
+
 const createMovie=async(data)=>{
     try{
         const movie=await Movie.create(data);
@@ -17,6 +23,11 @@ const createMovie=async(data)=>{
     }
 }
 
+/**
+ * @param  id -> id of the movie to be deleted
+ * @returns -> returns the response of the delete operation
+ */
+
 const deleteMovie=async(id)=>{
      try{
         const response=await Movie.deleteOne({_id:id});
@@ -31,12 +42,16 @@ const deleteMovie=async(id)=>{
         throw error;    
      }
 }
-
+/**
+ * 
+ * @param  id -> id of the movie to be fetched
+ * @returns -> returns the movie object if found, otherwise returns an error
+ */
 const getMovie=async(id)=>{
     const movie=await Movie.findById(id);
     if(!movie){
         return{
-            error:"No movie found with the corresponding name",
+            error:"No movie found with the corresponding id",
             code:404
         }
     }
@@ -45,6 +60,12 @@ const getMovie=async(id)=>{
 
 }
 
+/**
+ * 
+ * @param  id -> id of the movie to be updated
+ * @param  data -> contains the updated details of the movie
+ * @returns -> returns the updated movie object
+ */
 const updateMovie=async(id,data)=>{
     try{
         const movie=await Movie.findByIdAndUpdate(id,data,{new:true,runValidators:true});
@@ -62,6 +83,11 @@ const updateMovie=async(id,data)=>{
     }
 }
 
+/**
+ * 
+ * @param  filter -> contains the filter criteria for fetching movies
+ * @returns -> returns the list of movies that match the filter criteria
+ */
 const fetchMovies=async(filter)=>{
     let query={};
     if(filter.name){
