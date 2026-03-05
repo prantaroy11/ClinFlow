@@ -66,15 +66,31 @@ const getTheatre=async(id)=>{
  * 
  * @returns ->return all the theatre
  */
-const getAllTheatres=async()=>{
+const getAllTheatres=async(data)=>{
     try{
-        const theatres=await Theatre.find();
+        let query={};
+        if(data && data.city){
+            query.city=data.city;
+        }
+        if(data && data.pinCode){
+            query.pinCode=data.pinCode;
+        }
+        if(data && data.name){
+            query.name=data.name;
+        }
+        const theatres=await Theatre.find(query);
         return theatres;
     }catch(err){
         throw err;
     }
 }
-
+/**
+ * 
+ * @param theatreId -> id of the theatre whose movies are to be updated
+ * @param movieIds -> array of movie ids to be added or removed from the theatre
+ * @param insert -> boolean value indicating whether the movies are to be added or removed from the theatre
+ * @returns -> returns the updated theatre object if the update is successful, otherwise returns an error
+ */
 const updateMoviesInTheatres=async(theatreId,movieIds,insert)=>{
     const theatre=await Theatre.findById(theatreId);
     if(!theatre){

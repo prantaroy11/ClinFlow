@@ -56,7 +56,7 @@ const getTheatre=async(req,res)=>{
 
 const getAllTheatres=async(req,res)=>{
     try{
-        const response=await theatreService.getAllTheatres();
+        const response=await theatreService.getAllTheatres(req.query);
         if(response.length==0){
             errorResponseBody.error="No theatres found";
             errorResponseBody.code=404;
