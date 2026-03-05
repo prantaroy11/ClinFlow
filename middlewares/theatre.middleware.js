@@ -28,6 +28,19 @@ const validateTheatreCreateRequest=(req,res,next)=>{
     next();
 }
 
+const validateUpdateMovies=async(req,res,next)=>{
+    if(req.body.insert==undefined){
+        errorResponseBody.err="Insert field is required to update the movies of the theatre";
+        return res.status(400).json(errorResponseBody);
+    }
+    if(!req.body.movieIds || !Array.isArray(req.body.movieIds) || req.body.movieIds.length===0){
+        errorResponseBody.err="Details in invalid. Movie IDs field is required and should be a non-empty array";
+        return res.status(400).json(errorResponseBody);
+    }
+    next();
+}
+
 module.exports={
-    validateTheatreCreateRequest
+    validateTheatreCreateRequest,
+    validateUpdateMovies
 }
