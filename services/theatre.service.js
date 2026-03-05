@@ -19,8 +19,14 @@ const createTheatre=async(data)=>{
 
 const deleteTheatre=async(id)=>{
     try{
-        const theatre=await Theatre.deleteOne({_id:id});
-        return theatre;
+        const response=await Theatre.deleteOne({_id:id});
+        if(!response){
+            return{
+                err:"No theatre found with the corresponding id",
+                code:404
+            }
+        }
+        return response;
     }catch(err){
         throw err;
     }
@@ -42,9 +48,19 @@ const getTheatre=async(id)=>{
 
 }
 
+const getAllTheatres=async()=>{
+    try{
+        const theatres=await Theatre.find();
+        return theatres;
+    }catch(err){
+        throw err;
+    }
+}
+
 module.exports={
     createTheatre,
     deleteTheatre,
-    getTheatre
+    getTheatre,
+    getAllTheatres
 
 }
