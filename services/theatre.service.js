@@ -66,19 +66,58 @@ const getTheatre=async(id)=>{
  * 
  * @returns ->return all the theatre
  */
-const getAllTheatres=async()=>{
+const getAllTheatres=async(data)=>{
     try{
-        const theatres=await Theatre.find();
+        let query={};
+        if(data && data.city){
+            query.city=data.city;
+        }
+        if(data && data.pinCode){
+            query.pinCode=data.pinCode;
+        }
+        if(data && data.name){
+            query.name=data.name;
+        }
+        const theatres=await Theatre.find(query);
         return theatres;
     }catch(err){
         throw err;
     }
+}
+/**
+ * 
+ * @param theatreId -> id of the theatre whose movies are to be updated
+ * @param movieIds -> array of movie ids to be added or removed from the theatre
+ * @param insert -> boolean value indicating whether the movies are to be added or removed from the theatre
+ * @returns -> returns the updated theatre object if the update is successful, otherwise returns an error
+ */
+const updateMoviesInTheatres=async(theatreId,movieIds,insert)=>{
+    const theatre=await Theatre.findById(theatreId);
+    if(!theatre){
+        return{
+            err:"No theatre found with the corresponding id",
+            code:404
+        }
+    }
+
+    if(insert){
+        movieIds.forEach((movieId)=>{
+            if(!theatre.movies.includes(movieId)){
+                theatre.movies.push(movieId);
+            }
+        });
+    }else{
+       theatre.movies=theatre.movies.filter(movieId=>!movieIds.includes(movieId.toString()));
+    }
+    await theatre.save();
+    return theatre;
 }
 
 module.exports={
     createTheatre,
     deleteTheatre,
     getTheatre,
-    getAllTheatres
+    getAllTheatres,
+    updateMoviesInTheatres
 
 }

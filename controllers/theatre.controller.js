@@ -56,7 +56,7 @@ const getTheatre=async(req,res)=>{
 
 const getAllTheatres=async(req,res)=>{
     try{
-        const response=await theatreService.getAllTheatres();
+        const response=await theatreService.getAllTheatres(req.query);
         if(response.length==0){
             errorResponseBody.error="No theatres found";
             errorResponseBody.code=404;
@@ -72,10 +72,27 @@ const getAllTheatres=async(req,res)=>{
     }
 }
 
+const updateMoviesInTheatres=async(req,res)=>{
+    try{
+        const response=await theatreService.updateMoviesInTheatres(req.params.id,req.body.movieIds,req.body.insert);
+        if(response.err){
+            errorResponseBody.error=response.err;
+            errorResponseBody.code=response.code;
+            return res.status(response.code).json(errorResponseBody);
+        }
+        successResponseBody.data=response;
+        successResponseBody.message="Successfully updated the movies of the theatre";
+        return res.status(200).json(successResponseBody);
+    }catch(err){
+        errorResponseBody.error=err;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
 module.exports={
     create,
     destroy,
     getTheatre,
-    getAllTheatres
-    
+    getAllTheatres,
+    updateMoviesInTheatres
 }
