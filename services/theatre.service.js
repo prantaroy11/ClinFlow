@@ -1,5 +1,10 @@
 const Theatre=require('../models/theatre.model');
 
+/**
+ * 
+ * @param  data -> contains the details of the theatre to be created
+ * @returns -> returns the new theatre object created
+ */
 const createTheatre=async(data)=>{
     try{
         const theatre=await Theatre.create(data);
@@ -17,6 +22,11 @@ const createTheatre=async(data)=>{
     }
 }
 
+/**
+ * 
+ * @param  id -> id of the theatre to be deleted
+ * @returns -> returns the response of the delete operation
+ */
 const deleteTheatre=async(id)=>{
     try{
         const response=await Theatre.deleteOne({_id:id});
@@ -32,6 +42,11 @@ const deleteTheatre=async(id)=>{
     }
 }
 
+/**
+ * 
+ * @param  id -> id of the theatre to be fetched
+ * @returns -> returns the theatre object if found, otherwise returns an error
+ */
 const getTheatre=async(id)=>{
     try{
         const theatre=await Theatre.findById(id);
@@ -47,7 +62,10 @@ const getTheatre=async(id)=>{
     }
 
 }
-
+/**
+ * 
+ * @returns ->return all the theatre
+ */
 const getAllTheatres=async()=>{
     try{
         const theatres=await Theatre.find();

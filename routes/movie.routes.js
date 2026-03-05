@@ -1,6 +1,8 @@
 const movieController=require('../controllers/movie.controller');
 const movieMiddlewares=require('../middlewares/movie.middlewares');
 
+/// All the routes related to movie will be defined in this file
+
 const routers=(app)=>{
     app.post('/mba/api/v1/movies',movieMiddlewares.validateMovieCreateRequest,movieController.createMovie);
     app.delete('/mba/api/v1/movies/:id',movieController.deleteMovie);
