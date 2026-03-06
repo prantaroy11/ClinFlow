@@ -121,11 +121,34 @@ const updateMoviesInTheatres=async(theatreId,movieIds,insert)=>{
     return theatre;
 }
 
+const updateTheatre=async(id,data)=>{
+    try{
+        const response=await Theatre.findByIdAndUpdate(id,data,{returnDocument: "after",runValidators:true});
+        if(!response){
+            return{
+                err:"No theatre found with the corresponding id",
+                code:404
+            }
+        }
+        return response;
+    }catch(error){
+        if(err.name=="ValidationError"){
+            let err={};
+            Object.keys(error.errors).forEach((key)=>{
+                err[key]=error.errors[key].message;
+            });
+            return {err:err,code:422};
+        }
+        throw error;
+    }
+}
+
 module.exports={
     createTheatre,
     deleteTheatre,
     getTheatre,
     getAllTheatres,
-    updateMoviesInTheatres
+    updateMoviesInTheatres,
+    updateTheatre
 
 }
