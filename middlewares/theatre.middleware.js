@@ -1,4 +1,5 @@
 const { errorResponseBody } = require('../utils/responseBody');
+const mongoose=require('mongoose');
 
 /**
  * 
@@ -9,22 +10,36 @@ const { errorResponseBody } = require('../utils/responseBody');
  */
 
 const validateTheatreCreateRequest=(req,res,next)=>{
-    if(!req.body.name){
-        errorResponseBody.err="Name of the theatre is required";
-        return res.status(400).json(errorResponseBody);
+    const { name, city, pinCode, address } = req.body;
+
+    if(!name){
+        return res.status(400).json({
+            success:false,
+            message:"Name of the theatre is required"
+        });
     }
-    if(!req.body.city){
-        errorResponseBody.err="City of the theatre is required";
-        return res.status(400).json(errorResponseBody);
+
+    if(!city){
+        return res.status(400).json({
+            success:false,
+            message:"City of the theatre is required"
+        });
     }
-    if(!req.body.pinCode){
-        errorResponseBody.err="Pin code of the theatre is required";
-        return res.status(400).json(errorResponseBody);
+
+    if(!pinCode){
+        return res.status(400).json({
+            success:false,
+            message:"Pin code of the theatre is required"
+        });
     }
-    if(!req.body.address){
-        errorResponseBody.err="Address of the theatre is required";
-        return res.status(400).json(errorResponseBody);
+
+    if(!address){
+        return res.status(400).json({
+            success:false,
+            message:"Address of the theatre is required"
+        });
     }
+
     next();
 }
 
@@ -48,7 +63,16 @@ const validateUpdateMovies=async(req,res,next)=>{
     next();
 }
 
+const validateTheatreId=async(req,res,next)=>{
+    if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+        errorResponseBody.message="Invalid theatre id in the request params";
+        return res.status(400).json(errorResponseBody);
+    }
+    next();
+}
+
 module.exports={
     validateTheatreCreateRequest,
-    validateUpdateMovies
+    validateUpdateMovies,
+    validateTheatreId
 }
