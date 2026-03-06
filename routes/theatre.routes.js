@@ -11,6 +11,7 @@ const routes=(app)=>{
     app.put('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreMiddlewares.validateTheatreCreateRequest,theatreController.updateTheatre);
     app.patch('/mba/api/v1/theatres/:id/movies',theatreMiddlewares.validateTheatreId,theatreMiddlewares.validateUpdateMovies,theatreController.updateMoviesInTheatres);
     app.get('/mba/api/v1/theatres/:id/movies',theatreMiddlewares.validateTheatreId,theatreController.getMovies);
+    app.get('/mba/api/v1/theatres/:theatreId/movies/:movieId',theatreController.checkMovie);
 }
 
 

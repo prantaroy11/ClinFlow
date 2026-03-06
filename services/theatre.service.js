@@ -170,6 +170,21 @@ const getMoviesInTheatre=async(id)=>{
     }
 }
 
+const checkMovieInTheatre=async(theatreId,movieId)=>{
+    try{
+        const response=await Theatre.findOne({_id:theatreId,movies:movieId});
+        if(!response){
+            return{
+                err:"Movie not found in the theatre with the corresponding ids",
+                code:404
+            }
+        }
+        return response.populate('movies');
+    }catch(err){
+            throw err;
+    }
+}
+
 module.exports={
     createTheatre,
     deleteTheatre,
@@ -177,6 +192,7 @@ module.exports={
     getAllTheatres,
     updateMoviesInTheatres,
     updateTheatre,
-    getMoviesInTheatre
+    getMoviesInTheatre,
+    checkMovieInTheatre
 
 }
