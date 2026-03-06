@@ -1,4 +1,5 @@
 const Theatre=require('../models/theatre.model');
+const Movie=require('../models/movie.model');
 
 /**
  * 
@@ -79,6 +80,11 @@ const getAllTheatres=async(data)=>{
         if(data && data.name){
             query.name=data.name;
         }
+
+        if(data && data.movieId){
+            query.movies={$all: data.movieId};
+        }
+
         if(data && data.limit){
             pagination.limit=Number(data.limit);
         }
