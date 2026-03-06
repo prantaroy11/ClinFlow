@@ -100,25 +100,31 @@ const getAllTheatres=async(data)=>{
  * @returns -> returns the updated theatre object if the update is successful, otherwise returns an error
  */
 const updateMoviesInTheatres=async(theatreId,movieIds,insert)=>{
-    const theatre=await Theatre.findById(theatreId);
-    if(!theatre){
-        return{
-            err:"No theatre found with the corresponding id",
-            code:404
+    try{
+        if(insert){
+            await Theatre.updateOne(
+                {_id:theatreId},
+                {$addToSet:{movies:{$each:movieIds}}}
+            );
+        }else{
+            await Theatre.updateOne(
+                {_id:theatreId},
+                {$pull:{movies:{$in:movieIds}}}
+            );
         }
-    }
 
-    if(insert){
-        movieIds.forEach((movieId)=>{
-            if(!theatre.movies.includes(movieId)){
-                theatre.movies.push(movieId);
+        const theatre=await Theatre.findById(theatreId);
+        return theatre.populate('movies');
+
+    }catch(err){
+        if(err.name=="TypeError"){
+            return{
+                err:"No theatre found with the corresponding id",
+                code:404
             }
-        });
-    }else{
-       theatre.movies=theatre.movies.filter(movieId=>!movieIds.includes(movieId.toString()));
+        }
+        throw err;
     }
-    await theatre.save();
-    return theatre;
 }
 
 const updateTheatre=async(id,data)=>{
@@ -132,7 +138,7 @@ const updateTheatre=async(id,data)=>{
         }
         return response;
     }catch(error){
-        if(err.name=="ValidationError"){
+        if(error.name=="ValidationError"){
             let err={};
             Object.keys(error.errors).forEach((key)=>{
                 err[key]=error.errors[key].message;
