@@ -10,6 +10,7 @@ const routes=(app)=>{
     app.patch('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreController.updateTheatre);
     app.put('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreMiddlewares.validateTheatreCreateRequest,theatreController.updateTheatre);
     app.patch('/mba/api/v1/theatres/:id/movies',theatreMiddlewares.validateTheatreId,theatreMiddlewares.validateUpdateMovies,theatreController.updateMoviesInTheatres);
+    app.get('/mba/api/v1/theatres/:id/movies',theatreMiddlewares.validateTheatreId,theatreController.getMovies);
 }
 
 
