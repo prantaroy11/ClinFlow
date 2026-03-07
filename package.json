@@ -5,12 +5,13 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev":"nodemon index.js",
+    "dev": "nodemon index.js",
     "start": "node index.js"
   },
   "author": "Pranta Roy Joy",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.4",
     "express": "^4.19.2",
     "mongoose": "^9.2.3",

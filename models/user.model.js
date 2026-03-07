@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt=require('bcrypt');
 
 const userSchema=new mongoose.Schema({
     name:{
@@ -11,7 +12,7 @@ const userSchema=new mongoose.Schema({
         required:true,
         unique:true,
         match:[/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,"Please fill a valid email address"],
-        localStorage:true,
+        lowercase:true,
         trim:true
     },
     password:{
@@ -30,6 +31,19 @@ const userSchema=new mongoose.Schema({
         default:"APPROVED"
     }
 },{timestamps:true});
+
+userSchema.pre('save',async function(){
+    try{
+        if(!this.isModified('password')){
+            return ;
+        }
+        const salt=await bcrypt.genSalt(10);
+        this.password=await bcrypt.hash(this.password,salt);
+        console.log(this.password);
+    }catch(err){
+       throw err;
+    }
+})
 
 const User=mongoose.model('User',userSchema);
 
