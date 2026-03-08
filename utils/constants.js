@@ -1,4 +1,4 @@
-const USER_STATus={
+const USER_STATUS={
     approved:"APPROVED",
     pending:"PENDING",
     rejected:"REJECTED"
@@ -11,6 +11,6 @@ const USER_ROLE={
 }
 
 module.exports={
-    USER_STATus,
+    USER_STATUS,
     USER_ROLE
 }
