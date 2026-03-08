@@ -1,10 +1,15 @@
 const theatreController=require('../controllers/theatre.controller');
 const theatreMiddlewares=require('../middlewares/theatre.middleware');
+const authMiddlewares=require('../middlewares/auth.middlewares');
 
 /// All the routes related to theatre will be defined in this file
 const routes=(app)=>{
     app.post('/mba/api/v1/theatres',theatreMiddlewares.validateTheatreCreateRequest,theatreController.create);
-    app.delete('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreController.destroy);
+    app.delete('/mba/api/v1/theatres/:id',
+        authMiddlewares.isAuthenticated,
+        theatreMiddlewares.validateTheatreId,
+        theatreController.destroy
+    );
     app.get('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreController.getTheatre);
     app.get('/mba/api/v1/theatres',theatreController.getAllTheatres);
     app.patch('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreController.updateTheatre);
