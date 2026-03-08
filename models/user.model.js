@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt=require('bcrypt');
+const {USER_ROLE,USER_STATUS}=require('../utils/constants');
 
 const userSchema=new mongoose.Schema({
     name:{
@@ -23,12 +24,20 @@ const userSchema=new mongoose.Schema({
     userRole:{
         type:String,
         required:true,
-        default:"CUSTOMER"
+        enum:{
+            values:[USER_ROLE.customer,USER_ROLE.admin,USER_ROLE.client],
+            message:"Invalid user role given"
+        },
+        default:USER_ROLE.customer
     },
     userStatus:{
         type:String,
         required:true,
-        default:"APPROVED"
+        enum:{
+            values:[USER_STATUS.approved,USER_STATUS.pending,USER_STATUS.rejected],
+            message:"Invalid status for user"
+        },
+        default:USER_STATUS.approved
     }
 },{timestamps:true});
 
@@ -43,7 +52,19 @@ userSchema.pre('save',async function(){
     }catch(err){
        throw err;
     }
-})
+});
+
+/**
+ * This is an instance method which will be used to compare the password given by user and the hashed password stored in database
+ * @param  plainPassword-->Input password given by user 
+ * @returns ->boolean value indicating whether the password is correct or not
+ */
+
+userSchema.methods.isValidPassword=async function(plainPassword){
+    const currentUser=this;
+    const compare=await bcrypt.compare(plainPassword,currentUser.password);
+    return compare;
+}
 
 const User=mongoose.model('User',userSchema);
 
