@@ -1,4 +1,6 @@
+const jwt=require('jsonwebtoken');
 const {errorResponseBody}=require('../utils/responseBody');
+const userService=require('../services/user.service');
 
 /**
  * 
@@ -49,7 +51,41 @@ const validateSigninRequest=(req,res,next)=>{
     next();
 }
 
+const isAuthenticated=async(req,res,next)=>{
+    try{
+        const token=req.headers["x-access-token"];
+        if(!token){
+            errorResponseBody.message="Token is required for authentication";
+            errorResponseBody.error="Authentication error";
+            return res.status(403).json(errorResponseBody);
+        }
+
+        const response=jwt.verify(token,process.env.AUTH_KEY);
+        if(!response){
+            errorResponseBody.error="Token is invalid";
+            return res.status(401).json(errorResponseBody);
+        }
+
+        const user=await userService.getUserById(response.id);
+        req.user=user.id;
+        next();
+    }catch(err){
+        if(err.name=="JsonWebTokenError"){
+            errorResponseBody.error=err.message;
+            return res.status(401).json(errorResponseBody);
+        }
+        if(err.code==404){
+            errorResponseBody.error="User associated with the token not found";
+            return res.status(err.code).json(errorResponseBody);
+        }
+
+        errorResponseBody.error=err;
+        return res.status(500).json(errorResponseBody);
+    }
+}
+
 module.exports={
     validateSignupRequest,
-    validateSigninRequest
+    validateSigninRequest,
+    isAuthenticated
 }
