@@ -1,6 +1,7 @@
 const jwt=require('jsonwebtoken');
 const {errorResponseBody}=require('../utils/responseBody');
 const userService=require('../services/user.service');
+const {USER_ROLE}=require('../utils/constants');
 
 /**
  * 
@@ -84,8 +85,56 @@ const isAuthenticated=async(req,res,next)=>{
     }
 }
 
+
+const validateResetPasswordRequest=async(req,res,next)=>{
+    if(!req.body.oldPassword){
+        errorResponseBody.error="Missing the old password in the request";
+        return res.status(400).json(errorResponseBody);
+    }
+
+    if(!req.body.newPassword){
+        errorResponseBody.error="Missing the new password in the request";
+        return res.status(400).json(errorResponseBody);
+    }
+
+    next();
+}
+
+const isAdmin=async(req,res,next)=>{
+    const user=await userService.getUserById(req.user);
+    if(user.userRole!=USER_ROLE.admin){
+        errorResponseBody.error="User is not an admin, cannot proceed with the request";
+        return res.status(401).json(errorResponseBody);
+    }
+    next();
+}
+
+const isClient=async(req,res,next)=>{
+    const user=await userService.getUserById(req.user);
+    if(user.userRole!=USER_ROLE.client){
+        errorResponseBody.error="User is not a client, cannot proceed with the request";
+        return res.status(401).json(errorResponseBody);
+    }
+    next();
+}
+
+const isAdminOrClient=async(req,res,next)=>{
+    const user=await userService.getUserById(req.user);
+    if(user.userRole!=USER_ROLE.client && user.userRole!=USER_ROLE.admin){
+        errorResponseBody.error="User is neither a client not an admin, cannot proceed with the request";
+        return res.status(401).json(errorResponseBody);
+    }
+    next();
+}
+
+
+
 module.exports={
     validateSignupRequest,
     validateSigninRequest,
-    isAuthenticated
+    isAuthenticated,
+    validateResetPasswordRequest,
+    isAdmin,
+    isClient,
+    isAdminOrClient
 }
