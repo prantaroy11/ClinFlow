@@ -1,5 +1,5 @@
 const User=require('../models/user.model');
-const {USER_ROLE,USER_STATUS}=require('../utils/constants');
+const {USER_ROLE,USER_STATUS,STATUS}=require('../utils/constants');
 
 const createUser=async(data)=>{
     try{
@@ -34,7 +34,7 @@ const getUserByEmail=async(email)=>{
         });
 
         if(!response){
-            throw {err:"No user found with the given email",code:404};
+            throw {err:"No user found with the given email",code:STATUS.NOT_FOUND};
         }
         return response;
     }catch(err){
@@ -47,7 +47,7 @@ const getUserById=async(id)=>{
     try{
         const response=await User.findById(id);
         if(!response){
-            throw {err:"No user found with the given id",code:404};
+            throw {err:"No user found with the given id",code:STATUS.NOT_FOUND};
         }
         return response;
     }catch(err){
@@ -70,7 +70,7 @@ const getUserById=async(id)=>{
 
         if(!response){
             throw {err:"No user found for this given id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         };
 
@@ -82,7 +82,7 @@ const getUserById=async(id)=>{
                 error[key]=err.errors[key].message;
             })
            throw {err:error,
-            code:400
+            code:STATUS.BAD_REQUEST
            }
         }
         throw err;
