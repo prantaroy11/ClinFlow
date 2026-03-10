@@ -1,5 +1,6 @@
 const Theatre=require('../models/theatre.model');
 const Movie=require('../models/movie.model');
+const {STATUS}=require('../utils/constants');
 
 /**
  * 
@@ -16,7 +17,7 @@ const createTheatre=async(data)=>{
             Object.keys(err.errors).forEach((key)=>{
                 error[key]=err.errors[key].message;
             });
-            return {err:error,code:422};
+            throw {err:error,code:STATUS.UNPROCESSABLE_ENTITY};
         }else{
             throw err;
         }
@@ -30,11 +31,11 @@ const createTheatre=async(data)=>{
  */
 const deleteTheatre=async(id)=>{
     try{
-        const response=await Theatre.deleteOne({_id:id});
+        const response=await Theatre.findByIdAndDelete(id);
         if(!response){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         return response;
@@ -52,9 +53,9 @@ const getTheatre=async(id)=>{
     try{
         const theatre=await Theatre.findById(id);
         if(!theatre){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         return theatre;
@@ -124,9 +125,9 @@ const updateMoviesInTheatres=async(theatreId,movieIds,insert)=>{
 
     }catch(err){
         if(err.name=="TypeError"){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         throw err;
@@ -137,9 +138,9 @@ const updateTheatre=async(id,data)=>{
     try{
         const response=await Theatre.findByIdAndUpdate(id,data,{returnDocument: "after",runValidators:true});
         if(!response){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         return response;
@@ -149,7 +150,7 @@ const updateTheatre=async(id,data)=>{
             Object.keys(error.errors).forEach((key)=>{
                 err[key]=error.errors[key].message;
             });
-            return {err:err,code:422};
+            throw {err:err,code:STATUS.UNPROCESSABLE_ENTITY};
         }
         throw error;
     }
@@ -159,9 +160,9 @@ const getMoviesInTheatre=async(id)=>{
     try{
         const theatre=await Theatre.findById(id,{name:1,movies:1,address:1}).populate('movies');
         if(!theatre){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         return theatre;
@@ -174,9 +175,9 @@ const checkMovieInTheatre=async(theatreId,movieId)=>{
     try{
         const response=await Theatre.findOne({_id:theatreId,movies:movieId});
         if(!response){
-            return{
+            throw{
                 err:"Movie not found in the theatre with the corresponding ids",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         return response.populate('movies');

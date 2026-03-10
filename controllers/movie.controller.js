@@ -1,90 +1,84 @@
 const Movie=require('../models/movie.model');
 const movieService=require('../services/movie.service');
 const { errorResponseBody, successResponseBody } = require('../utils/responseBody');
-
+const {STATUS}=require('../utils/constants');
 
 const createMovie=async(req,res)=>{
     try{
         const response=await movieService.createMovie(req.body);
-        if(response.err){
-            errorResponseBody.error=response.err;
-            errorResponseBody.code=response.code;
-            errorResponseBody.message="Validation error";
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Successfully created the movie";
-        return res.status(201).json(successResponseBody);
+        return res.status(STATUS.CREATED).json(successResponseBody);
     }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
         errorResponseBody.error=err;
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
 const deleteMovie=async(req,res)=>{
     try{
         const response=await movieService.deleteMovie(req.params.id);
-        if(response.err){
-            errorResponseBody.error=response.err;
-            errorResponseBody.code=response.code;
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Successfully deleted the movie";
-        return res.status(200).json(successResponseBody);
+        return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
-        return res.status(500).json(errorResponseBody);
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return req.status(err.code).json(errorResponseBody);
+        }
+        errorResponseBody.error=err;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
 const getMovie=async(req,res)=>{
     try{
         const response=await movieService.getMovie(req.params.id);
-        if(response.error){
-            errorResponseBody.error=response.code;
-            errorResponseBody.message=response.error;
-            return res.status(response.code).json(errorResponseBody);
-        }
-
         successResponseBody.data=response;
-        return res.status(200).json(successResponseBody);
+        return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
-        return res.status(500).json({errorResponseBody});
+        if(err.error){
+            errorResponseBody.error=err.error;
+            return res.status(err.code).json(errorResponseBody);
+        }
+        errorResponseBody.error=err;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json({errorResponseBody});
     }
 }
 
 const updateMovie=async(req,res)=>{
     try{
         const response=await movieService.updateMovie(req.params.id,req.body);
-        if(response.err){
-            errorResponseBody.error=response.err;
-            errorResponseBody.code=response.code;
-            errorResponseBody.message="Validation error";
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Successfully updated the movie";
-        return res.status(200).json(successResponseBody);
+        return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
         errorResponseBody.error=err;
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
 const getMovies=async(req,res)=>{
     try{
         const response=await movieService.fetchMovies(req.query);
-        if(response.err){
-            errorResponseBody.error=response.code;
-            errorResponseBody.message=response.err;
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Successfully fetched the movies";
-        return res.status(200).json(successResponseBody);
+        return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
         errorResponseBody.error=err;
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
