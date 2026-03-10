@@ -4,7 +4,12 @@ const authMiddlewares=require('../middlewares/auth.middlewares');
 
 /// All the routes related to theatre will be defined in this file
 const routes=(app)=>{
-    app.post('/mba/api/v1/theatres',theatreMiddlewares.validateTheatreCreateRequest,theatreController.create);
+    app.post('/mba/api/v1/theatres',
+        authMiddlewares.isAuthenticated,
+        authMiddlewares.isAdminOrClient,
+        theatreMiddlewares.validateTheatreCreateRequest,
+        theatreController.create
+    );
     app.delete('/mba/api/v1/theatres/:id',
         authMiddlewares.isAuthenticated,
         theatreMiddlewares.validateTheatreId,

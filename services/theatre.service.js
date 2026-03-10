@@ -1,5 +1,6 @@
 const Theatre=require('../models/theatre.model');
 const Movie=require('../models/movie.model');
+const {STATUS}=require('../utils/constants');
 
 /**
  * 
@@ -16,7 +17,7 @@ const createTheatre=async(data)=>{
             Object.keys(err.errors).forEach((key)=>{
                 error[key]=err.errors[key].message;
             });
-            return {err:error,code:422};
+            throw {err:error,code:STATUS.UNPROCESSABLE_ENTITY};
         }else{
             throw err;
         }
