@@ -31,11 +31,11 @@ const createMovie=async(data)=>{
 
 const deleteMovie=async(id)=>{
      try{
-        const response=await Movie.deleteOne({_id:id});
+        const response=await Movie.findByIdAndDelete(id);
         if(!response){
-            return{
+            throw{
                 err:"No movie found with the corresponding id", 
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }       
         return response;

@@ -11,7 +11,11 @@ const routers=(app)=>{
         movieMiddlewares.validateMovieCreateRequest,
         movieController.createMovie
     );
-    app.delete('/mba/api/v1/movies/:id',movieController.deleteMovie);
+    app.delete('/mba/api/v1/movies/:id',
+        authMiddlewares.isAuthenticated,
+        authMiddlewares.isAdminOrClient,
+        movieController.deleteMovie
+    );
     app.get('/mba/api/v1/movies/:id',movieController.getMovie);
     app.put('/mba/api/v1/movies/:id',movieController.updateMovie);
     app.patch('/mba/api/v1/movies/:id',movieController.updateMovie);
