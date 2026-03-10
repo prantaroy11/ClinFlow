@@ -1,5 +1,6 @@
 const userService=require('../services/user.service');
 const {errorResponseBody,successResponseBody}=require('../utils/responseBody');
+const {STATUS}=require('../utils/constants');
 
 const update=async(req,res)=>{
     try{
@@ -7,14 +8,14 @@ const update=async(req,res)=>{
 
         successResponseBody.data=response;
         successResponseBody.message="Successfully update the user";
-        return res.status(200).json(successResponseBody);
+        return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
         if(err.err){
             errorResponseBody.error=err.err;
             return res.status(err.code).json(errorResponseBody);
         }
         errorResponseBody.error=err.err;
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
