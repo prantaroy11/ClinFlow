@@ -33,9 +33,9 @@ const deleteTheatre=async(id)=>{
     try{
         const response=await Theatre.findByIdAndDelete(id);
         if(!response){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         return response;
@@ -53,9 +53,9 @@ const getTheatre=async(id)=>{
     try{
         const theatre=await Theatre.findById(id);
         if(!theatre){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         return theatre;

@@ -15,7 +15,10 @@ const routes=(app)=>{
         authMiddlewares.isAdminOrClient,
         theatreController.destroy
     );
-    app.get('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreController.getTheatre);
+    app.get('/mba/api/v1/theatres/:id',
+        theatreMiddlewares.validateTheatreId,
+        theatreController.getTheatre
+    );
     app.get('/mba/api/v1/theatres',theatreController.getAllTheatres);
     app.patch('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreController.updateTheatre);
     app.put('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreMiddlewares.validateTheatreCreateRequest,theatreController.updateTheatre);
