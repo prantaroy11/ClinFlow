@@ -77,7 +77,7 @@ const updateMovie=async(id,data)=>{
             Object.keys(error.errors).forEach((key)=>{
                 err[key]=error.errors[key].message;
             });
-            return {err:err,code:422};
+            throw {err:err,code:STATUS.UNPROCESSABLE_ENTITY};
         }else{
             throw error;
         }

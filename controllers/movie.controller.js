@@ -53,18 +53,16 @@ const getMovie=async(req,res)=>{
 const updateMovie=async(req,res)=>{
     try{
         const response=await movieService.updateMovie(req.params.id,req.body);
-        if(response.err){
-            errorResponseBody.error=response.err;
-            errorResponseBody.code=response.code;
-            errorResponseBody.message="Validation error";
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Successfully updated the movie";
-        return res.status(200).json(successResponseBody);
+        return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
         errorResponseBody.error=err;
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
