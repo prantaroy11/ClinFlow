@@ -1,23 +1,21 @@
 const Movie=require('../models/movie.model');
 const movieService=require('../services/movie.service');
 const { errorResponseBody, successResponseBody } = require('../utils/responseBody');
-
+const {STATUS}=require('../utils/constants');
 
 const createMovie=async(req,res)=>{
     try{
         const response=await movieService.createMovie(req.body);
-        if(response.err){
-            errorResponseBody.error=response.err;
-            errorResponseBody.code=response.code;
-            errorResponseBody.message="Validation error";
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Successfully created the movie";
-        return res.status(201).json(successResponseBody);
+        return res.status(STATUS.CREATED).json(successResponseBody);
     }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
         errorResponseBody.error=err;
-        return res.status(500).json(errorResponseBody);
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
 }
 
