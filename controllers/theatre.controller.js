@@ -71,15 +71,14 @@ const getAllTheatres=async(req,res)=>{
 const updateMoviesInTheatres=async(req,res)=>{
     try{
         const response=await theatreService.updateMoviesInTheatres(req.params.id,req.body.movieIds,req.body.insert);
-        if(response.err){
-            errorResponseBody.error=response.err;
-            errorResponseBody.code=response.code;
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Successfully updated the movies of the theatre";
         return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
         errorResponseBody.error=err;
         return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
@@ -105,15 +104,14 @@ const updateTheatre=async(req,res)=>{
 const getMovies=async(req,res)=>{
     try{
         const response=await theatreService.getMoviesInTheatre(req.params.id);
-        if(response.err){
-            errorResponseBody.error=response.err;
-            errorResponseBody.code=response.code;
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Successfully fetched the movies in the theatre";
         return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
         errorResponseBody.error=err;
         return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);    
     }
@@ -122,15 +120,14 @@ const getMovies=async(req,res)=>{
 const checkMovie=async(req,res)=>{
     try{
         const response=await theatreService.checkMovieInTheatre(req.params.theatreId,req.params.movieId);
-        if(response.err){
-            errorResponseBody.error=response.err;
-            errorResponseBody.code=response.code;
-            return res.status(response.code).json(errorResponseBody);
-        }
         successResponseBody.data=response;
         successResponseBody.message="Movie found in the theatre";
         return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
         errorResponseBody.error=err;
         return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
     }
