@@ -51,9 +51,9 @@ const deleteMovie=async(id)=>{
 const getMovie=async(id)=>{
     const movie=await Movie.findById(id);
     if(!movie){
-        return{
+        throw{
             error:"No movie found with the corresponding id",
-            code:404
+            code:STATUS.NOT_FOUND
         }
     }
 
@@ -97,9 +97,9 @@ const fetchMovies=async(filter)=>{
 
     let movies=await Movie.find(query);
     if(!movies){
-        return{
+        throw{
             err:"No movies found with the corresponding name",
-            code:404
+            code:STATUS.NOT_FOUND
         }
     }
     return movies;
