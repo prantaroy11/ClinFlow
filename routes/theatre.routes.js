@@ -12,7 +12,7 @@ const routes=(app)=>{
     );
     app.delete('/mba/api/v1/theatres/:id',
         authMiddlewares.isAuthenticated,
-        theatreMiddlewares.validateTheatreId,
+        authMiddlewares.isAdminOrClient,
         theatreController.destroy
     );
     app.get('/mba/api/v1/theatres/:id',theatreMiddlewares.validateTheatreId,theatreController.getTheatre);

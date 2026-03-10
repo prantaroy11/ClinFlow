@@ -31,7 +31,7 @@ const createTheatre=async(data)=>{
  */
 const deleteTheatre=async(id)=>{
     try{
-        const response=await Theatre.deleteOne({_id:id});
+        const response=await Theatre.findByIdAndDelete(id);
         if(!response){
             return{
                 err:"No theatre found with the corresponding id",
