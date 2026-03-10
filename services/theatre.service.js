@@ -138,9 +138,9 @@ const updateTheatre=async(id,data)=>{
     try{
         const response=await Theatre.findByIdAndUpdate(id,data,{returnDocument: "after",runValidators:true});
         if(!response){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
-                code:404
+                code:STATUS.NOT_FOUND
             }
         }
         return response;
@@ -150,7 +150,7 @@ const updateTheatre=async(id,data)=>{
             Object.keys(error.errors).forEach((key)=>{
                 err[key]=error.errors[key].message;
             });
-            return {err:err,code:422};
+            throw {err:err,code:STATUS.UNPROCESSABLE_ENTITY};
         }
         throw error;
     }
@@ -160,7 +160,7 @@ const getMoviesInTheatre=async(id)=>{
     try{
         const theatre=await Theatre.findById(id,{name:1,movies:1,address:1}).populate('movies');
         if(!theatre){
-            return{
+            throw{
                 err:"No theatre found with the corresponding id",
                 code:404
             }
