@@ -1,0 +1,25 @@
+const { errorResponseBody, successResponseBody } = require('../utils/responseBody');
+const bookingService=require('../services/booking.services');
+const {STATUS}=require('../utils/constants');
+
+
+const create=async(req,res)=>{
+    try{
+        let userId=req.user;
+        const response=await bookingService.createBooking({...req.body,userId:userId});
+        successResponseBody.message="Successfully created a booking";
+        successResponseBody.data=response;
+        return res.status(STATUS.CREATED).json(successResponseBody);
+    }catch(err){
+        if(err.err){
+            errorResponseBody.error=err.err;
+            return res.status(err.code).json(errorResponseBody);
+        }
+        errorResponseBody.error=err;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+    }
+}
+
+module.exports={
+    create,
+}

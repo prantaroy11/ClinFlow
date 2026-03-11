@@ -173,14 +173,14 @@ const getMoviesInTheatre=async(id)=>{
 
 const checkMovieInTheatre=async(theatreId,movieId)=>{
     try{
-        const response=await Theatre.findOne({_id:theatreId,movies:movieId});
+        const response=await Theatre.findById({theatreId});
         if(!response){
             throw{
                 err:"Movie not found in the theatre with the corresponding ids",
                 code:STATUS.NOT_FOUND
             }
         }
-        return response.populate('movies');
+        return response.movies.indexOf(movieId)!=-1;
     }catch(err){
             throw err;
     }
