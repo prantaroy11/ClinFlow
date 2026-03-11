@@ -19,6 +19,35 @@ const createBooking=async(data)=>{
     }
 }
 
+const updateBooking=async(data,bookingId)=>{
+    try{
+        const response=await Booking.findByIdAndUpdate(bookingId,data,{
+            new:true,runValidators:true
+        });
+
+        if(!response){
+            throw{
+                err:"No booking found for this ginven id",
+                code:STATUS.NOT_FOUND
+            }
+        }
+
+        return response;
+    }catch(err){
+        console.log(err);
+        if(err.name=='ValidationError'){
+            let error={};
+            Object.keys(err.errors).forEach((key)=>{
+                error[key]=err.errors[key].message;
+            });
+
+            throw {err:error,code:STATUS.UNPROCESSABLE_ENTITY};
+        }
+        throw err;
+    }
+}
+
 module.exports={
     createBooking,
+    updateBooking
 }
