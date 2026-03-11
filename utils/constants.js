@@ -27,9 +27,16 @@ const BOOKING_STATUS={
     processing:"IN_PROCESS"
 }
 
+const PAMENT_STATUE={
+    failed:"FAILED",
+    success:"SUCCESS",
+    pending:"PENDING"
+}
+
 module.exports={
     USER_STATUS,
     BOOKING_STATUS,
+    PAMENT_STATUE,
     USER_ROLE,
     STATUS:STATUS_CODES,
 
