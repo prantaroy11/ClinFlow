@@ -47,7 +47,65 @@ const updateBooking=async(data,bookingId)=>{
     }
 }
 
+const getBookings=async(data)=>{
+    try{
+        const response=await Booking.find(data);
+        if(response.length==0){
+            throw{
+                err:"No user find with the crosponding user id",
+                code:STATUS.NOT_FOUND
+            }
+        }
+        return response;
+    }catch(err){
+        throw err;
+    }
+}
+
+const getAllBookings=async()=>{
+    try{
+        const response=await Booking.find();
+        if(response.length==0){
+            throw{
+                err:"There are currently no bookings",
+                code:STATUS.OK
+            }
+        }
+        return response;
+    }catch(err){
+        throw err;
+    }
+}
+
+const getBookingById=async(id,userId)=>{
+    try{
+        const response=await Booking.findById(id);
+        if(!response){
+            throw{
+                err:"No booking records found for the id",
+                code:STATUS.NOT_FOUND
+            }
+        }
+
+        if(response.userId != userId){
+            throw{
+                err:"Not able to acess the booking",
+                code:STATUS.UNAUTHORISED
+            }
+        }
+       return response;
+    }catch(err){
+        console.log(err);
+        throw err;
+    }
+}
+
+
+
 module.exports={
     createBooking,
-    updateBooking
+    updateBooking,
+    getBookings,
+    getAllBookings,
+    getBookingById
 }
