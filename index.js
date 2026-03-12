@@ -8,6 +8,7 @@ const TheatreRoutes=require('./routes/theatre.routes');
 const AuthRoutes=require('./routes/auth.routes');
 const UserRoutes=require('./routes/user.routes');
 const BookingRoutes=require('./routes/booking.routes');
+const ShowRoutes=require('./routes/show.routes');
 
 
 const app=express();
@@ -21,6 +22,7 @@ TheatreRoutes(app);
 AuthRoutes(app);
 UserRoutes(app);
 BookingRoutes(app);
+ShowRoutes(app);
 
 app.listen(3000,async()=>{
     console.log("Server is running on port 3000");
