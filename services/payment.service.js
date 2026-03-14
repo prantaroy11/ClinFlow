@@ -1,5 +1,6 @@
 const Payment=require('../models/payment.model');
 const Booking=require('../models/booking.model');
+const Show=require('../models/show.models');
 const {STATUS,BOOKING_STATUS,PAYMENT_STATUS, USER_ROLE}=require('../utils/constants');
 const User = require('../models/user.model');
 
@@ -7,6 +8,7 @@ const User = require('../models/user.model');
 const createPayment=async(data)=>{
     try{
         const booking=await Booking.findById(data.bookingId);
+        const show=await Show.findOne({movieId:data.movieId,theatreId:data.theatreId,timing:data.timing});
         if(booking.status==BOOKING_STATUS.successfull){
             throw{
                 err:"Booking already done, connot make a  new payment against it",
@@ -47,8 +49,10 @@ const createPayment=async(data)=>{
         }
         payment.status=PAYMENT_STATUS.success;
         booking.status=BOOKING_STATUS.successfull;
+        show.noOfSeats-=data.noOfSeats
         await booking.save();
         await payment.save();
+        await show.save();
         return booking;
     }catch(err){
         throw err;
