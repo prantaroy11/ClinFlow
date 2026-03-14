@@ -1,6 +1,7 @@
 const Payment=require('../models/payment.model');
 const Booking=require('../models/booking.model');
-const {STATUS,BOOKING_STATUS,PAYMENT_STATUS}=require('../utils/constants');
+const {STATUS,BOOKING_STATUS,PAYMENT_STATUS, USER_ROLE}=require('../utils/constants');
+const User = require('../models/user.model');
 
 
 const createPayment=async(data)=>{
@@ -69,7 +70,26 @@ const getPaymentById=async(id)=>{
     }
 }
 
+const getAllPayments = async (userId) => {
+    try {
+
+        const user = await User.findById(userId);
+
+        let filter={};
+        if(user.userRole != USER_ROLE.admin){
+            filter.userId=user._id;
+        }
+        const bookings=await Booking.find(filter,'_id');
+        const bookingIds = bookings.map(b => b._id);
+        const payments=await Payment.find({bookingId:{$in:bookingIds}});
+        return payments
+    } catch (err) {
+        throw err;
+    }
+};
+
 module.exports={
     createPayment,
-    getPaymentById
+    getPaymentById,
+    getAllPayments
 }
