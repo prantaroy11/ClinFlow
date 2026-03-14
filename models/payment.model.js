@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const {PAMENT_STATUE}=require('../utils/constants');
+const {PAYMENT_STATUS}=require('../utils/constants');
 
 const paymentSchema=new mongoose.Schema({
     bookingId:{
@@ -14,10 +14,10 @@ const paymentSchema=new mongoose.Schema({
     status:{
         type:String,
         enum:{
-            values:[PAMENT_STATUE.pending,PAMENT_STATUE.failed,PAMENT_STATUE.success],
+            values:[PAYMENT_STATUS.pending,PAYMENT_STATUS.failed,PAYMENT_STATUS.success],
             message:"Invalid payment"
         },
-        default:PAMENT_STATUE.pending  
+        default:PAYMENT_STATUS.pending  
     }
 },{timestamps:true});
 

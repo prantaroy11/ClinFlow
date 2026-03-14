@@ -18,25 +18,27 @@ const STATUS_CODES={
     NOT_FOUND:404,
     BAD_REQUEST:400,
     FORBIDDEN:403,
-    UNPROCESSABLE_ENTITY:422
+    UNPROCESSABLE_ENTITY:422,
+    GONE:410
 }
 
 const BOOKING_STATUS={
     cancelled:"CANCELLED",
     successfull:"SUCCESSFULL",
+    expired: "EXPIRED",
     processing:"IN_PROCESS"
 }
 
-const PAMENT_STATUE={
+const PAYMENT_STATUS={
     failed:"FAILED",
     success:"SUCCESS",
-    pending:"PENDING"
+    pending:"PENDING",
 }
 
 module.exports={
     USER_STATUS,
     BOOKING_STATUS,
-    PAMENT_STATUE,
+    PAYMENT_STATUS,
     USER_ROLE,
     STATUS:STATUS_CODES,
 
