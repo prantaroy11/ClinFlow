@@ -5,58 +5,49 @@ const {STATUS,BOOKING_STATUS,PAYMENT_STATUS, USER_ROLE}=require('../utils/consta
 const User = require('../models/user.model');
 
 
-const createPayment=async(data)=>{
-    try{
-        const booking=await Booking.findById(data.bookingId);
-        const show=await Show.findOne({movieId:data.movieId,theatreId:data.theatreId,timing:data.timing});
-        if(booking.status==BOOKING_STATUS.successfull){
-            throw{
-                err:"Booking already done, connot make a  new payment against it",
-                code:STATUS.FORBIDDEN
-            }
-        }
-        if(!booking){
-            throw{
-                err:"No booking found",
-                code:STATUS.NOT_FOUND
-            }
-        }
 
-        let bookingTime=booking.createdAt;
-        let currentTime=Date.now();
+const createPayment = async(data)=>{
+   try{
 
-        let minutes=Math.floor(((currentTime-bookingTime)/1000)/60);
-        if(minutes>5){
-            booking.status=BOOKING_STATUS.expired;
-            await booking.save();
-            return booking;
-        }
+      const booking = await Booking.findById(data.bookingId);
 
-        const payment=await Payment.create({
-            bookingId:data.bookingId,
-            amount:booking.totalCost
-        });
+      if(!booking){
+         throw{
+            err:"No booking found",
+            code:STATUS.NOT_FOUND
+         }
+      }
 
-        if(payment.amount != booking.totalCost){
-            payment.status=PAYMENT_STATUS.failed;
-        }
+      if(booking.status == BOOKING_STATUS.successfull){
+         throw{
+            err:"Booking already paid",
+            code:STATUS.FORBIDDEN
+         }
+      }
 
-        if(!payment || payment.status==PAYMENT_STATUS.failed){
-            booking.status=BOOKING_STATUS.cancelled;
-            await booking.save();
-            await payment.save();
-            return booking;
-        }
-        payment.status=PAYMENT_STATUS.success;
-        booking.status=BOOKING_STATUS.successfull;
-        show.noOfSeats-=data.noOfSeats
-        await booking.save();
-        await payment.save();
-        await show.save();
-        return booking;
-    }catch(err){
-        throw err;
-    }
+      if(data.amount != booking.totalCost){
+         throw{
+            err:"Incorrect payment amount",
+            code:STATUS.BAD_REQUEST
+         }
+      }
+
+      const payment = await Payment.create({
+         bookingId:data.bookingId,
+         amount:data.amount
+      });
+
+      payment.status = PAYMENT_STATUS.success;
+      booking.status = BOOKING_STATUS.successfull;
+
+      await payment.save();
+      await booking.save();
+
+      return booking;
+
+   }catch(err){
+      throw err;
+   }
 }
 
 const getPaymentById=async(id)=>{
