@@ -32,15 +32,17 @@ const validateBookingCreateRequest=async(req,res,next)=>{
         return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
     }
 
+    const movie = await movieService.getMovie(req.body.movieId);
+
+    if(!movie){
+        errorResponseBody.error = "Movie not found";
+        return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
+    }
+
     if(theatre.movies.indexOf(req.body.movieId)==-1){
         errorResponseBody.error="Given movie is not available in the requested theatre";
         return res.status(STATUS.NOT_FOUND).json(errorResponseBody);
     }
-
-    // if(!theatre.timings.includes(req.body.timing)){
-    //     errorResponseBody.error="Invalid show timing";
-    //     return res.status(STATUS.BAD_REQUEST).json(errorResponseBody);
-    // }
 
     if(!req.body.timing){
         errorResponseBody.error="No movie timing passed";

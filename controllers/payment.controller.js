@@ -4,7 +4,6 @@ const {errorResponseBody,successResponseBody}=require('../utils/responseBody');
 const User=require('../models/user.model');
 const Movie=require('../models/movie.model');
 const Theatre=require('../models/theatre.model');
-const { findById } = require('../models/payment.model');
 const sendMail=require('../services/email.service');
 
 const create=async(req,res)=>{
@@ -23,6 +22,15 @@ const create=async(req,res)=>{
         const user=await User.findById(response.userId);
         const movie=await Movie.findById(response.movieId);
         const theatre=await Theatre.findById(response.theatreId);
+        
+        console.log("USER:", user);
+        console.log("MOVIE:", movie);
+        console.log("THEATRE:", theatre);
+
+        if (!user || !movie || !theatre) {
+            throw new Error("Related data missing for booking");
+        }
+
         successResponseBody.data=response;
         successResponseBody.message="Booking compleated successfully";
 
