@@ -4,8 +4,8 @@ const {errorResponseBody,successResponseBody}=require('../utils/responseBody');
 const User=require('../models/user.model');
 const Movie=require('../models/movie.model');
 const Theatre=require('../models/theatre.model');
-const axios=require('axios');
 const { findById } = require('../models/payment.model');
+const sendMail=require('../services/email.service');
 
 const create=async(req,res)=>{
     try{
@@ -26,12 +26,13 @@ const create=async(req,res)=>{
         successResponseBody.data=response;
         successResponseBody.message="Booking compleated successfully";
 
-        await axios.post(process.env.NOTI_SERVICE + '/notiservice/api/v1/notifications',{
-            subject:'Your booking is successfull',
-            recepientEmails:[user.email],
-            content:`Your bookig for ${movie.name} in ${theatre.name} for ${response.noOfSeats} seats on ${response.timing} is successfull.
+        sendMail(
+            'Your booking is successfull',
+            response.userId,
+            `Your bookig for ${movie.name} in ${theatre.name} for ${response.noOfSeats} seats on ${response.timing} is successfull.
             Your booking id is ${response.id}`
-        });
+        )
+
         return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
         if(err.err){
