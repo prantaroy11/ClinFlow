@@ -1,6 +1,11 @@
 const paymentService=require('../services/payment.service');
 const {STATUS,BOOKING_STATUS}=require('../utils/constants');
 const {errorResponseBody,successResponseBody}=require('../utils/responseBody');
+const User=require('../models/user.model');
+const Movie=require('../models/movie.model');
+const Theatre=require('../models/theatre.model');
+const { findById } = require('../models/payment.model');
+const sendMail=require('../services/email.service');
 
 const create=async(req,res)=>{
     try{
@@ -15,8 +20,19 @@ const create=async(req,res)=>{
             errorResponseBody.data=response;
             return res.status(STATUS.PAYMENT_REQUIRED).json(errorResponseBody);
         }
+        const user=await User.findById(response.userId);
+        const movie=await Movie.findById(response.movieId);
+        const theatre=await Theatre.findById(response.theatreId);
         successResponseBody.data=response;
         successResponseBody.message="Booking compleated successfully";
+
+        sendMail(
+            'Your booking is successfull',
+            response.userId,
+            `Your bookig for ${movie.name} in ${theatre.name} for ${response.noOfSeats} seats on ${response.timing} is successfull.
+            Your booking id is ${response.id}`
+        )
+
         return res.status(STATUS.OK).json(successResponseBody);
     }catch(err){
         if(err.err){
@@ -45,7 +61,20 @@ const getPaymentDetailsById=async(req,res)=>{
     }
 }
 
+const getAllPayments=async(req,res)=>{
+    try{
+        const response= await paymentService.getAllPayments(req.user);
+        successResponseBody.data=response;
+        successResponseBody.message="Successfully fetched all the payments";
+        return res.status(STATUS.OK).json(successResponseBody);
+    }catch(err){
+        errorResponseBody.error=err;
+        return res.status(STATUS.INTERNAL_SERVER_ERROR).json(errorResponseBody);
+    }
+}
+
 module.exports={
     create,
-    getPaymentDetailsById
+    getPaymentDetailsById,
+    getAllPayments
 }
