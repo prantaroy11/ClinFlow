@@ -1,6 +1,5 @@
 const axios=require('axios');
 const User=require('../models/user.model');
-const { response } = require('express');
 
 const sendMail= async(subject,id,content)=>{
     try{
@@ -11,7 +10,7 @@ const sendMail= async(subject,id,content)=>{
             content:content
         });
 
-        console.log("Notification service response",response.data);
+        console.log("Notification service response",user.data);
     }catch(err){
         console.error("Notification service error:", err.message);
     }
