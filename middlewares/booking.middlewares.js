@@ -4,6 +4,7 @@ const ObjectId=require('mongoose').Types.ObjectId;
 
 const theatreService=require('../services/theatre.service');
 const userService=require('../services/user.service');
+const movieService = require('../services/movie.service');
 
 const validateBookingCreateRequest=async(req,res,next)=>{
     if(!req.body.theatreId){

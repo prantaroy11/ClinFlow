@@ -27,7 +27,11 @@ BookingRoutes(app);
 ShowRoutes(app);
 PaymentRoutes(app);
 
-app.listen(3000,async()=>{
+app.get('/',(req,res)=>{
+    res.send('Home');
+});
+
+app.listen(process.env.PORT,async()=>{
     console.log(`Server is running on port ${process.env.PORT}`);
     try{
         if(process.env.NODE_ENV=='production'){
