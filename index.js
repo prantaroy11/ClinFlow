@@ -28,8 +28,15 @@ ShowRoutes(app);
 PaymentRoutes(app);
 
 app.listen(3000,async()=>{
-    console.log("Server is running on port 3000");
-
-   await mongoose.connect(process.env.DB_URL);
-   console.log("successfully connect mongo");
+    console.log(`Server is running on port ${process.env.PORT}`);
+    try{
+        if(process.env.NODE_ENV=='production'){
+            await mongoose.connect(process.env.PROD_DB_URL);
+        }else{
+            await mongoose.connect(process.env.DB_URL);
+        }
+        console.log("successfully connect mongo");
+    }catch(err){
+        console.log("Not able to connect mongo",err)
+    }
 })
