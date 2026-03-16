@@ -10,7 +10,7 @@ const sendMail= async(subject,id,content)=>{
             content:content
         });
     }catch(err){
-        console.log("Failed to send notification request:", error.message);
+        console.log("Failed to send notification request:", err);
     }
 }
 
